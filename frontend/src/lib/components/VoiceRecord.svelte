@@ -1,26 +1,20 @@
 <script lang="ts">
-  import { devlog } from "$lib/data/utils";
   import IconVideoPause from "$lib/icons/IconVideoPause.svelte";
   import IconVideoPlay from "$lib/icons/IconVideoPlay.svelte";
   import classnames from "classnames";
-  import { onMount } from "svelte";
 
   export let audio: HTMLAudioElement;
 
   let mediaRecorder: MediaRecorder;
   let audioChunks: Array<Blob> = [];
   let recording = false;
+  let downloadUrl = ""; // Add a variable for the download URL
+  let downloadLinkName = "recording.webm"; // Set a default download name
 
   async function startRecording() {
     recording = true;
     audioChunks = [];
-    devlog("before");
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch (e) {
-      devlog(e);
-    }
-    devlog("after");
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaRecorder = new MediaRecorder(stream);
 
     mediaRecorder.ondataavailable = (event) => {
@@ -28,10 +22,11 @@
     };
 
     mediaRecorder.onstop = () => {
-      const audioBlob = new Blob(audioChunks);
+      const audioBlob = new Blob(audioChunks, { type: "audio/webm" }); // Specify the MIME type
       const audioUrl = URL.createObjectURL(audioBlob);
       audio = new Audio(audioUrl);
       audio.play();
+      downloadUrl = audioUrl; // Update the download URL
     };
 
     mediaRecorder.start();
@@ -42,6 +37,11 @@
     mediaRecorder.stop();
   }
 </script>
+
+<!-- Add a download link to your component's HTML -->
+<a href={downloadUrl} download={downloadLinkName} class="button"
+  >Download Recording</a
+>
 
 <button
   class={classnames("w-20 h-20 rounded-full", {
