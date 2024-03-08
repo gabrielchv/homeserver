@@ -1,22 +1,19 @@
 <script lang="ts">
-  let value: string;
+  import type { PageData } from "./$types";
 
-  const sendValue = () => {
-    fetch("/api/getinfo", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ value }),
-    }).then((res) => console.log(res));
-  };
+  export let data: PageData;
+
+  $: console.log(data);
 </script>
 
-<div class="w-full h-screen bg-red-300 flex justify-center items-center">
-  <input on:change={sendValue} type="text" bind:value />
-  <a
-    href="/fontes"
-    class="text-rose-100 hover:text-rose-50 hover:scale-110 transition ease-in-out font-bold"
-    >fontes</a
-  >
+<div class="w-full h-screen bg-slate-900 flex justify-center items-center">
+  {#if data.routes}
+    {#each data.routes as route}
+      <a
+        href={route.link}
+        class="text-indigo-50 hover:text-indigo-100 hover:scale-110 transition ease-in-out font-bold"
+        >{route.title}</a
+      >
+    {/each}
+  {/if}
 </div>

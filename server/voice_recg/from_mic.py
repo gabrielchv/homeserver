@@ -2,12 +2,10 @@ import speech_recognition as sr
 
 def execute_command(text):
     # Define actions based on keywords
-    if "hello" in text:
-        print("Greetings!")
-    if "bye" in text:
-        print("Goodbye!")
-    if "macaco louco" in text:
-        print("mokeko")
+    if "agat" in text:
+        print("muie linda demais")
+    if "gabriel" in text:
+        print("homi fei veio")
     # Add more commands as needed
 
 # Initialize recognizer class (for recognizing the speech)
